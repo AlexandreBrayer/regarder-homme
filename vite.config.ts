@@ -8,7 +8,7 @@ export default defineConfig({
 	},
 	resolve: {
 		alias: {
-		  '@zodyac/zod-mongoose': 'node_modules/@zodyac/zod-mongoose/dist/index.js',
-		},
-	  },
+			'@zodyac/zod-mongoose': 'node_modules/@zodyac/zod-mongoose/dist/index.js'
+		}
+	}
 });

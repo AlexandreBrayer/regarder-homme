@@ -20,12 +20,16 @@ export const ProductSchema = z.object({
 	color: z.string().optional(),
 	gender: z.string().optional(),
 	// from: zId.describe('ObjectId:Process'),
-	meta: z.array(z.object({
-		key: z.string(),
-		value: z.string(),
-	})).optional(),
-	createdAt : z.date().optional(),
-	updatedAt : z.date().optional(),
+	meta: z
+		.array(
+			z.object({
+				key: z.string(),
+				value: z.string()
+			})
+		)
+		.optional(),
+	createdAt: z.date().optional(),
+	updatedAt: z.date().optional()
 });
 export type Product = MongoDefaultType & z.infer<typeof ProductSchema>;
 const schema = zodSchema(ProductSchema).set('timestamps', true);

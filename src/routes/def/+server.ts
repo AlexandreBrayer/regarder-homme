@@ -1,5 +1,5 @@
-import api from "$api/index";
-import { json } from "@sveltejs/kit";
+import api from '$api/index';
+import { json } from '@sveltejs/kit';
 
 export const prerender = true;
 
