@@ -39,6 +39,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@sveltejs/adapter-node": "^4.0.1",
 		"@zodyac/zod-mongoose": "^1.0.7",
 		"mongoose": "^8.1.1",
 		"zod": "^3.22.4"
