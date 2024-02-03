@@ -7,7 +7,7 @@ export const Output = z.object({
 	names: z.array(z.string())
 });
 
-export default async function (): Promise<z.infer<typeof Output>>{
+export default async function (): Promise<z.infer<typeof Output>> {
 	const names = await getNames();
 	return { names };
 }
