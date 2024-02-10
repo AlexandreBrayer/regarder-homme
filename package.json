@@ -47,6 +47,7 @@
 	"dependencies": {
 		"@sveltejs/adapter-node": "^4.0.1",
 		"@zodyac/zod-mongoose": "^1.0.7",
+		"ag-grid-community": "^31.0.3",
 		"bits-ui": "^0.17.0",
 		"clsx": "^2.1.0",
 		"lucide-svelte": "^0.323.0",
