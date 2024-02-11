@@ -14,7 +14,7 @@ const config = {
 		adapter: adapter(),
 		alias: {
 			'$api/*': './src/api/*',
-			"$lib/*": "./src/lib/*",
+			'$lib/*': './src/lib/*'
 		}
 	}
 };
