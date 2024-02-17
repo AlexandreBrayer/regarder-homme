@@ -19,7 +19,7 @@ export const ProductSchema = z.object({
 	composition: z.string().optional(),
 	color: z.string().optional(),
 	gender: z.string().optional(),
-	// from: zId.describe('ObjectId:Process'),
+	from: z.string(),
 	meta: z
 		.array(
 			z.object({
