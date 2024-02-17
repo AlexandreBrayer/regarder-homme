@@ -8,10 +8,13 @@ export const Modifier: RouteModifier = (r) => (r ? { ...r, tags: ['Auth'] } : r)
 export const Input = z.object({
 	username: z.string().min(3).max(20),
 	email: z.string(),
-	password: z.string().min(8).max(100)
-	.refine((password) =>
-		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,100}$/.test(password)
-	)
+	password: z
+		.string()
+		.min(8)
+		.max(100)
+		.refine((password) =>
+			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,100}$/.test(password)
+		)
 });
 
 export const Output = z.object({
