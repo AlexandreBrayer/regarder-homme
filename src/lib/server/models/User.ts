@@ -6,14 +6,19 @@ import type { MongoDefaultType } from '../utils/db/MongoDefaultType';
 const { model, models } = mongoose;
 
 export const UserSchema = z.object({
-	username: z.string(),
-	email: z.string(),
-	password: z.string(),
-	role: z.enum(['user', 'admin']),
-	createdAt: z.date().optional(),
-	updatedAt: z.date().optional()
+    username: z.string(),
+    email: z.string(),
+    password: z.string(),
+    role: z.enum(['user', 'admin']),
+    createdAt: z.date().optional(),
+    updatedAt: z.date().optional()
 });
 
 export type User = MongoDefaultType & z.infer<typeof UserSchema>;
-const schema = zodSchema(UserSchema).set('timestamps', true);
+
+const schema = zodSchema(UserSchema);
+
+schema.path('email').unique(true);
+schema.path('username').unique(true);
+
 export const UserModel = models.User || model('User', schema);
