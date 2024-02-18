@@ -1,9 +1,11 @@
 import { z, type RouteModifier } from 'sveltekit-api';
 import { UserModel } from '$lib/server/models/User';
-import { connectDB, disconnectDB } from '$lib/server/db';
-import bcrypt from 'bcryptjs';
+import { hashPassword } from '$lib/server/auth/hashManagement';
+import { addTags } from '$lib/server/utils/openApi/modifiers';
+import { dbOperationWrapper } from '$lib/server/utils/db/operationWrapper';
 
-export const Modifier: RouteModifier = (r) => (r ? { ...r, tags: ['Auth'] } : r);
+
+export const Modifier: RouteModifier = (r) => addTags(r, ['Auth']);
 
 export const Input = z.object({
 	username: z.string().min(3).max(20),
@@ -23,13 +25,11 @@ export const Output = z.object({
 });
 
 export default async function (input: z.infer<typeof Input>): Promise<z.infer<typeof Output>> {
-	const saltRounds = 10;
-	const salt = await bcrypt.genSalt(saltRounds);
-	const password = await bcrypt.hash(input.password, salt);
+	const password = await hashPassword(input.password);
 	try {
-		await connectDB();
-		await UserModel.create({ ...input, password, role: 'user' });
-		await disconnectDB();
+		await dbOperationWrapper(async (): Promise<void> => {
+			return (await UserModel.create({ ...input, password, role: 'user' }))
+		})
 		return { status: 'success' };
 	} catch (error) {
 		console.error(`register error: ${error}`);
