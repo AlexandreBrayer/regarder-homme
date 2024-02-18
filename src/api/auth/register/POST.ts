@@ -3,6 +3,7 @@ import { UserModel } from '$lib/server/models/User';
 import { hashPassword } from '$lib/server/auth/hashManagement';
 import { addTags } from '$lib/server/utils/openApi/modifiers';
 import { dbOperationWrapper } from '$lib/server/utils/db/operationWrapper';
+import { pickErrors } from '$lib/server/utils/openApi/errors';
 
 const Modifier: RouteModifier = (r) => addTags(r, ['Auth']);
 
@@ -23,7 +24,9 @@ const Output = z.object({
 	message: z.string().optional()
 });
 
-export default new Endpoint({ Input, Output, Modifier }).handle(async (param) => {
+const Error = pickErrors([500]);
+
+export default new Endpoint({ Input, Output, Modifier, Error }).handle(async (param) => {
 	const password = await hashPassword(param.password);
 	try {
 		await dbOperationWrapper(async (): Promise<void> => {
@@ -32,6 +35,6 @@ export default new Endpoint({ Input, Output, Modifier }).handle(async (param) =>
 		return { status: 'success' };
 	} catch (error) {
 		console.error(`register error: ${error}`);
-		return { status: 'error', message: (error as Error).message ?? 'Unknown error' };
+		throw Error[500];
 	}
 });

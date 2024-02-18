@@ -1,6 +1,7 @@
 import { z, Endpoint, type RouteModifier } from 'sveltekit-api';
 import spawnSpider from '$lib/server/spider/spawnSpider';
 import { addTags } from '$lib/server/utils/openApi/modifiers';
+import { pickErrors } from '$lib/server/utils/openApi/errors';
 
 const Modifier: RouteModifier = (r) => addTags(r, ['Spider']);
 
@@ -12,12 +13,14 @@ const Input = z.object({
 	name: z.string()
 });
 
-export default new Endpoint({ Input, Output, Modifier }).handle(async (param) => {
+const Error = pickErrors([500]);
+
+export default new Endpoint({ Input, Output, Modifier, Error }).handle(async (param) => {
 	try {
 		spawnSpider(param.name);
 		return { status: 'success' };
 	} catch (error) {
 		console.error(`spawnSpider error: ${error}`);
-		return { status: 'error' };
+		throw Error[500];
 	}
 });
