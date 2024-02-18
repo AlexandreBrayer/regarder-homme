@@ -1,12 +1,12 @@
 import { z, Endpoint, type RouteModifier } from 'sveltekit-api';
 import { UserModel, type User } from '$lib/server/models/User';
-import { addTags } from '$lib/server/utils/openApi/modifiers';
+import { modifyRoute } from '$lib/server/utils/openApi/modifiers';
 import { comparePassword } from '$lib/server/auth/hashManagement';
 import { dbOperationWrapper } from '$lib/server/utils/db/operationWrapper';
 import { createToken, createRefreshToken } from '$lib/server/auth/jwtManagement';
 import { pickErrors } from '$lib/server/utils/openApi/errors';
 
-const Modifier: RouteModifier = (r) => addTags(r, ['Auth']);
+const Modifier: RouteModifier = (r) => modifyRoute(r, { tags: ['Auth'], security: [] });
 
 const Input = z.object({
 	username: z.string(),

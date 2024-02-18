@@ -1,5 +1,5 @@
 import type { RouteConfig } from 'sveltekit-api';
 
-export function addTags(route: RouteConfig, tags: string[]): RouteConfig {
-	return { ...route, tags: tags };
+export function modifyRoute(route: RouteConfig, modifier: Record<string, unknown>): RouteConfig {
+	return { ...route, ...modifier };
 }

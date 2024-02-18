@@ -1,9 +1,9 @@
 import { z, Endpoint, type RouteModifier } from 'sveltekit-api';
 import getNames from '$lib/server/spider/getNames';
-import { addTags } from '$lib/server/utils/openApi/modifiers';
+import { modifyRoute } from '$lib/server/utils/openApi/modifiers';
 import { pickErrors } from '$lib/server/utils/openApi/errors';
 
-const Modifier: RouteModifier = (r) => addTags(r, ['Spider']);
+const Modifier: RouteModifier = (r) => modifyRoute(r, { tags: ['Spider'] });
 
 const Output = z.object({
 	names: z.array(z.string())
