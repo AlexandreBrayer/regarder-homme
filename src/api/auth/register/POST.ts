@@ -1,13 +1,12 @@
-import { z, type RouteModifier } from 'sveltekit-api';
+import { z, Endpoint, type RouteModifier } from 'sveltekit-api';
 import { UserModel } from '$lib/server/models/User';
 import { hashPassword } from '$lib/server/auth/hashManagement';
 import { addTags } from '$lib/server/utils/openApi/modifiers';
 import { dbOperationWrapper } from '$lib/server/utils/db/operationWrapper';
 
+const Modifier: RouteModifier = (r) => addTags(r, ['Auth']);
 
-export const Modifier: RouteModifier = (r) => addTags(r, ['Auth']);
-
-export const Input = z.object({
+const Input = z.object({
 	username: z.string().min(3).max(20),
 	email: z.string(),
 	password: z
@@ -19,20 +18,20 @@ export const Input = z.object({
 		)
 });
 
-export const Output = z.object({
+const Output = z.object({
 	status: z.string(),
 	message: z.string().optional()
 });
 
-export default async function (input: z.infer<typeof Input>): Promise<z.infer<typeof Output>> {
-	const password = await hashPassword(input.password);
+export default new Endpoint({ Input, Output, Modifier }).handle(async (param) => {
+	const password = await hashPassword(param.password);
 	try {
 		await dbOperationWrapper(async (): Promise<void> => {
-			return (await UserModel.create({ ...input, password, role: 'user' }))
-		})
+			return await UserModel.create({ ...param, password, role: 'user' });
+		});
 		return { status: 'success' };
 	} catch (error) {
 		console.error(`register error: ${error}`);
 		return { status: 'error', message: (error as Error).message ?? 'Unknown error' };
 	}
-}
+});
