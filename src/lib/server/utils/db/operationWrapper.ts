@@ -9,8 +9,12 @@ export async function dbOperationWrapper<T>(operation: () => Promise<T>) {
 }
 
 export function documentSerializer<T extends Document>(document: T) {
-	return {
-		...document.toObject(),
-		_id: document._id.toString()
-	};
+    const serializedDocument = {
+        ...document.toObject(),
+        _id: document._id.toString()
+    };
+
+    delete serializedDocument.__v;
+
+    return serializedDocument;
 }
