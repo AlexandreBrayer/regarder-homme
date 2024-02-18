@@ -1,7 +1,8 @@
 import { z, type RouteModifier } from 'sveltekit-api';
 import spawnSpider from '$lib/server/spider/spawnSpider';
+import { addTags } from '$lib/server/utils/openApi/modifiers';
 
-export const Modifier: RouteModifier = (r) => (r ? { ...r, tags: ['Spider'] } : r);
+export const Modifier: RouteModifier = (r) => addTags(r, ['Spider']);
 
 export const Output = z.object({
 	status: z.string()
