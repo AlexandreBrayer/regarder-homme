@@ -9,7 +9,7 @@ const Output = z.object({
 	names: z.array(z.string())
 });
 
-const Error = pickErrors([500]);
+const Error = pickErrors([500, 401]);
 
 export default new Endpoint({ Output, Modifier, Error }).handle(async () => {
 	try {

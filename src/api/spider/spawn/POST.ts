@@ -16,7 +16,7 @@ const Input = z.object({
 	name: z.string()
 });
 
-const Error = pickErrors([500]);
+const Error = pickErrors([500, 401]);
 
 export default new Endpoint({ Input, Output, Modifier, Error }).handle(async (param) => {
 	try {

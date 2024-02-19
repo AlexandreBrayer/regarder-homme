@@ -5,7 +5,7 @@ import { modifyRoute } from '$lib/server/utils/openApi/modifiers';
 import { dbOperationWrapper } from '$lib/server/utils/db/operationWrapper';
 import { pickErrors } from '$lib/server/utils/openApi/errors';
 
-const Modifier: RouteModifier = (r) => modifyRoute(r, { tags: ['Auth'], security: [] });
+const Modifier: RouteModifier = (r) => modifyRoute(r, { tags: ['Auth'] });
 
 const Input = z.object({
 	username: z.string().min(3).max(20),
@@ -21,10 +21,9 @@ const Input = z.object({
 
 const Output = z.object({
 	status: z.string(),
-	message: z.string().optional()
 });
 
-const Error = pickErrors([500]);
+const Error = pickErrors([500, 401]);
 
 export default new Endpoint({ Input, Output, Modifier, Error }).handle(async (param) => {
 	const password = await hashPassword(param.password);
