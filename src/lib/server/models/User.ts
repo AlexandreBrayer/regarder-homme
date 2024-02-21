@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import mongoose from 'mongoose';
 import { zodSchema } from '@zodyac/zod-mongoose';
-import type { MongoDefaultType } from '../utils/db/MongoDefaultType';
+import type { MongoDefaultType } from '../utils/db';
 
 const { model, models } = mongoose;
 

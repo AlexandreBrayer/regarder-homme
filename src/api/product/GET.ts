@@ -1,7 +1,7 @@
 import { ProductModel, ProductSchema, type Product } from '$lib/server/models/Product';
 import { z, Endpoint, type RouteModifier } from 'sveltekit-api';
 import { modifyRoute } from '$lib/server/utils/openApi/modifiers';
-import { dbOperationWrapper, documentSerializer } from '$lib/server/utils/db/operationWrapper';
+import { dbOperationWrapper, documentSerializer } from '$lib/server/utils/db';
 import type { Document } from 'mongoose';
 import { pickErrors } from '$lib/server/utils/openApi/errors';
 

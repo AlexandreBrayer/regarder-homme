@@ -2,7 +2,7 @@ import { z, Endpoint, type RouteModifier } from 'sveltekit-api';
 import { UserModel } from '$lib/server/models/User';
 import { hashPassword } from '$lib/server/auth/hashManagement';
 import { modifyRoute } from '$lib/server/utils/openApi/modifiers';
-import { dbOperationWrapper } from '$lib/server/utils/db/operationWrapper';
+import { dbOperationWrapper } from '$lib/server/utils/db';
 import { pickErrors } from '$lib/server/utils/openApi/errors';
 
 const Modifier: RouteModifier = (r) => modifyRoute(r, { tags: ['Auth'] });

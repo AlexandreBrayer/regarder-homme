@@ -1,7 +1,7 @@
 import { z, Endpoint, type RouteModifier } from 'sveltekit-api';
 import { modifyRoute } from '$lib/server/utils/openApi/modifiers';
 import { UserModel, type User } from '$lib/server/models/User';
-import { dbOperationWrapper } from '$lib/server/utils/db/operationWrapper';
+import { dbOperationWrapper } from '$lib/server/utils/db';
 import { refreshToken, verifyRefreshToken } from '$lib/server/auth/jwtManagement';
 import { pickErrors } from '$lib/server/utils/openApi/errors';
 

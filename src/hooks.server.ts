@@ -1,6 +1,8 @@
 import { verifyToken } from '$lib/server/auth/jwtManagement';
 import type { RequestEvent } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
+import { dbOperationWrapper } from '$lib/server/utils/db';
+import { UserModel } from '$lib/server/models/User';
 
 enum UnprotectedRoutes {
 	ApiLogin = '/api/auth/login',
@@ -8,6 +10,12 @@ enum UnprotectedRoutes {
 	Login = '/login',
 	Docs = '/docs',
 	Def = '/def'
+}
+
+async function getUserById(id: string) {
+	return dbOperationWrapper(async () => {
+		return await UserModel.findById(id);
+	});
 }
 
 function getTokenFromEventHeaders(event: RequestEvent) {
@@ -24,7 +32,12 @@ async function handleProtectedApiRoutes(event: RequestEvent) {
 	if (!token) {
 		throw new Error('Unauthorized');
 	}
-	await verifyToken(token);
+	const tokenPayload = await verifyToken(token);
+	const userId = tokenPayload.id;
+	const user = await getUserById(userId);
+	if (!user) {
+		throw new Error('Unauthorized');
+	}
 }
 
 async function handleProtectedRoutes(event: RequestEvent) {
@@ -32,12 +45,17 @@ async function handleProtectedRoutes(event: RequestEvent) {
 	if (!token) {
 		throw new Error('Unauthorized');
 	}
-	await verifyToken(token);
+	const tokenPayload = await verifyToken(token);
+	const userId = tokenPayload.id;
+	const user = await getUserById(userId);
+	if (!user) {
+		throw new Error('Unauthorized');
+	}
 }
 
 export async function handle({ event, resolve }) {
 	if (Object.values(UnprotectedRoutes).includes(event.url.pathname as UnprotectedRoutes)) {
-		if (event.url.pathname === UnprotectedRoutes.Login)  {
+		if (event.url.pathname === UnprotectedRoutes.Login) {
 			try {
 				await handleProtectedRoutes(event);
 			} catch (error) {
