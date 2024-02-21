@@ -4152,10 +4152,10 @@ svelte-preprocess@^5.1.0:
     sorcery "^0.11.0"
     strip-indent "^3.0.0"
 
-svelte@^5.0.0-next.1:
-  version "5.0.0-next.40"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-5.0.0-next.40.tgz#5ad98ae258ed8a936872c9cff488a3c3f30abcaa"
-  integrity sha512-bkta9Uxzfqigow6t4g1z6sDTy8tECxO5fpNFl3wy84NgAwt3PKDLv4nboFUi6lsApI2a7d5X0Ur+qkG8eu82cQ==
+svelte@5.0.0-next.64:
+  version "5.0.0-next.64"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-5.0.0-next.64.tgz#e39568b66f906d11342c8162b9475ef9ea8ff42e"
+  integrity sha512-MXQgo86gXY1dVQSWNrUnckALKT7e1pbCu2PcWzpWsKswMqO/Ruiab+GJKNzP4I1AafAILbKaCBXYsWDuKtTnNg==
   dependencies:
     "@ampproject/remapping" "^2.2.1"
     "@jridgewell/sourcemap-codec" "^1.4.15"
@@ -4169,7 +4169,7 @@ svelte@^5.0.0-next.1:
     is-reference "^3.0.2"
     locate-character "^3.0.0"
     magic-string "^0.30.5"
-    zimmerframe "^1.1.0"
+    zimmerframe "^1.1.2"
 
 sveltekit-api@^0.4.4:
   version "0.4.4"
@@ -4769,10 +4769,10 @@ zenscroll@^4.0.2:
   resolved "https://registry.yarnpkg.com/zenscroll/-/zenscroll-4.0.2.tgz#e8d5774d1c0738a47bcfa8729f3712e2deddeb25"
   integrity sha512-jEA1znR7b4C/NnaycInCU6h/d15ZzCd1jmsruqOKnZP6WXQSMH3W2GL+OXbkruslU4h+Tzuos0HdswzRUk/Vgg==
 
-zimmerframe@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/zimmerframe/-/zimmerframe-1.1.0.tgz#29f2b760d11228490109808e2b56ba67f25af199"
-  integrity sha512-+AmV37r9NPUy7KcuG0Fde9AAFSD88kN5pnqvD7Pkp5WLLK0jct7hAtIDXXFDCRk3l5Mc1r2Sth3gfP2ZLE+/Qw==
+zimmerframe@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/zimmerframe/-/zimmerframe-1.1.2.tgz#5b75f1fa83b07ae2a428d51e50f58e2ae6855e5e"
+  integrity sha512-rAbqEGa8ovJy4pyBxZM70hg4pE6gDgaQ0Sl9M3enG3I0d6H4XSAM3GeNGLKnsBpuijUow064sf7ww1nutC5/3w==
 
 zod-to-json-schema@^3.22.4:
   version "3.22.4"

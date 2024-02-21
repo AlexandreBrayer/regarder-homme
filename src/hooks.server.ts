@@ -39,7 +39,7 @@ export async function handle({ event, resolve }) {
 	if (Object.values(UnprotectedRoutes).includes(event.url.pathname as UnprotectedRoutes)) {
 		if (event.url.pathname === UnprotectedRoutes.Login)  {
 			try {
-				handleProtectedRoutes(event);
+				await handleProtectedRoutes(event);
 			} catch (error) {
 				return await resolve(event);
 			}
