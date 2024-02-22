@@ -28,11 +28,16 @@ export const actions = {
 			return fail(401, { form });
 		}
 		const { token, refreshToken } = await loginResponse.json();
-		cookies.set('token', token, { path: '/', sameSite: 'lax', secure: true, httpOnly: true });
+		cookies.set('token', token, {
+			path: '/',
+			sameSite: 'lax',
+			//  secure: true,
+			httpOnly: true
+		});
 		cookies.set('refreshToken', refreshToken, {
 			path: '/',
 			sameSite: 'lax',
-			secure: true,
+			// secure: true,
 			httpOnly: true
 		});
 		redirect(302, '/');
