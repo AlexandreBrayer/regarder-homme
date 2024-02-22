@@ -31,13 +31,13 @@ export const actions = {
 		cookies.set('token', token, {
 			path: '/',
 			sameSite: 'lax',
-			//  secure: true,
+			secure: false,
 			httpOnly: true
 		});
 		cookies.set('refreshToken', refreshToken, {
 			path: '/',
 			sameSite: 'lax',
-			// secure: true,
+			secure: false,
 			httpOnly: true
 		});
 		redirect(302, '/');
