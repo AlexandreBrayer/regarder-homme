@@ -15,6 +15,7 @@ export const UserSchema = z.object({
 });
 
 export type User = MongoDefaultType & z.infer<typeof UserSchema>;
+export type FrontUser = Omit<User, 'password'>;
 
 const schema = zodSchema(UserSchema);
 

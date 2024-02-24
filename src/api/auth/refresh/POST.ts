@@ -34,4 +34,3 @@ export default new Endpoint({ Input, Output, Error, Modifier }).handle(async (pa
 		throw Error[401];
 	}
 });
-

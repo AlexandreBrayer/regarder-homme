@@ -1,8 +1,9 @@
 import { verifyToken } from '$lib/server/auth/jwtManagement';
-import type { RequestEvent } from '@sveltejs/kit';
+import type { RequestEvent, ResolveOptions, MaybePromise } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
-import { dbOperationWrapper } from '$lib/server/utils/db';
-import { UserModel } from '$lib/server/models/User';
+import { dbOperationWrapper, documentSerializer } from '$lib/server/utils/db';
+import { UserModel, type User } from '$lib/server/models/User';
+import type { Document } from 'mongoose';
 
 enum UnprotectedRoutes {
 	ApiLogin = '/api/auth/login',
@@ -14,7 +15,11 @@ enum UnprotectedRoutes {
 
 async function getUserById(id: string) {
 	return dbOperationWrapper(async () => {
-		return await UserModel.findById(id);
+		const user = (await UserModel.findById(id).select('-password')) as Document<User> | null;
+		if (!user) {
+			return null;
+		}
+		return documentSerializer(user);
 	});
 }
 
@@ -27,56 +32,66 @@ function getTokenFromEventCookies(event: RequestEvent) {
 	return event.cookies.get('token');
 }
 
-async function handleProtectedApiRoutes(event: RequestEvent) {
+async function handleProtectedApiRoutes(
+	event: RequestEvent,
+	resolve: (event: RequestEvent, opts?: ResolveOptions) => MaybePromise<Response>
+) {
 	const token = getTokenFromEventHeaders(event);
 	if (!token) {
-		throw new Error('Unauthorized');
+		return new Response('Unauthorized', { status: 401 });
 	}
 	const tokenPayload = await verifyToken(token);
 	const userId = tokenPayload.id;
 	const user = await getUserById(userId);
 	if (!user) {
-		throw new Error('Unauthorized');
+		return new Response('Unauthorized', { status: 401 });
 	}
+	return await resolve(event);
 }
 
-async function handleProtectedRoutes(event: RequestEvent) {
+async function handleProtectedRoutes(
+	event: RequestEvent,
+	resolve: (event: RequestEvent, opts?: ResolveOptions) => MaybePromise<Response>
+) {
 	const token = getTokenFromEventCookies(event);
 	if (!token) {
-		throw new Error('Unauthorized');
+		return redirect(302, UnprotectedRoutes.Login);
 	}
 	const tokenPayload = await verifyToken(token);
 	const userId = tokenPayload.id;
 	const user = await getUserById(userId);
 	if (!user) {
-		throw new Error('Unauthorized');
+		return redirect(302, UnprotectedRoutes.Login);
 	}
+	return await resolve({ ...event, locals: { user } });
+}
+
+async function handleUnprotectedRoutes(
+	event: RequestEvent,
+	resolve: (event: RequestEvent, opts?: ResolveOptions) => MaybePromise<Response>
+) {
+	const token = getTokenFromEventCookies(event);
+		if (token) {
+			try {
+				const tokenPayload = await verifyToken(token);
+				const userId = tokenPayload.id;
+				const user = await getUserById(userId);
+				if (user) {
+					return await resolve({ ...event, locals: { user } });
+				}
+			} catch (err) {
+				return await resolve(event);
+			}
+		}
+	return await resolve(event);
 }
 
 export async function handle({ event, resolve }) {
 	if (Object.values(UnprotectedRoutes).includes(event.url.pathname as UnprotectedRoutes)) {
-		if (event.url.pathname === UnprotectedRoutes.Login) {
-			try {
-				await handleProtectedRoutes(event);
-			} catch (error) {
-				return await resolve(event);
-			}
-			return redirect(302, '/');
-		}
-		return await resolve(event);
+		return await handleUnprotectedRoutes(event, resolve);
 	}
 	if (event.url.pathname.startsWith('/api')) {
-		try {
-			await handleProtectedApiRoutes(event);
-			return await resolve(event);
-		} catch (error) {
-			return new Response('Unauthorized', { status: 401 });
-		}
+		return await handleProtectedApiRoutes(event, resolve);
 	}
-	try {
-		await handleProtectedRoutes(event);
-	} catch (error) {
-		return redirect(302, UnprotectedRoutes.Login);
-	}
-	return await resolve(event);
+	return await handleProtectedRoutes(event, resolve);
 }
