@@ -71,18 +71,18 @@ async function handleUnprotectedRoutes(
 	resolve: (event: RequestEvent, opts?: ResolveOptions) => MaybePromise<Response>
 ) {
 	const token = getTokenFromEventCookies(event);
-		if (token) {
-			try {
-				const tokenPayload = await verifyToken(token);
-				const userId = tokenPayload.id;
-				const user = await getUserById(userId);
-				if (user) {
-					return await resolve({ ...event, locals: { user } });
-				}
-			} catch (err) {
-				return await resolve(event);
+	if (token) {
+		try {
+			const tokenPayload = await verifyToken(token);
+			const userId = tokenPayload.id;
+			const user = await getUserById(userId);
+			if (user) {
+				return await resolve({ ...event, locals: { user } });
 			}
+		} catch (err) {
+			return await resolve(event);
 		}
+	}
 	return await resolve(event);
 }
 
