@@ -40,13 +40,17 @@ async function handleProtectedApiRoutes(
 	if (!token) {
 		return new Response('Unauthorized', { status: 401 });
 	}
-	const tokenPayload = await verifyToken(token);
-	const userId = tokenPayload.id;
-	const user = await getUserById(userId);
-	if (!user) {
+	try {
+		const tokenPayload = await verifyToken(token);
+		const userId = tokenPayload.id;
+		const user = await getUserById(userId);
+		if (!user) {
+			return new Response('Unauthorized', { status: 401 });
+		}
+		return await resolve(event);
+	} catch (err) {
 		return new Response('Unauthorized', { status: 401 });
 	}
-	return await resolve(event);
 }
 
 async function handleProtectedRoutes(
@@ -57,13 +61,17 @@ async function handleProtectedRoutes(
 	if (!token) {
 		return redirect(302, UnprotectedRoutes.Login);
 	}
-	const tokenPayload = await verifyToken(token);
-	const userId = tokenPayload.id;
-	const user = await getUserById(userId);
-	if (!user) {
+	try {
+		const tokenPayload = await verifyToken(token);
+		const userId = tokenPayload.id;
+		const user = await getUserById(userId);
+		if (!user) {
+			return redirect(302, UnprotectedRoutes.Login);
+		}
+		return await resolve({ ...event, locals: { user } });
+	} catch (err) {
 		return redirect(302, UnprotectedRoutes.Login);
 	}
-	return await resolve({ ...event, locals: { user } });
 }
 
 async function handleUnprotectedRoutes(
